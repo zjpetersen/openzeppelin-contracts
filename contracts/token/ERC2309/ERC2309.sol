@@ -254,6 +254,16 @@ contract ERC2309 is Context, ERC165, IERC721, IERC721Metadata, IERC2309, Ownable
     }
 
 
+    /**
+     * @dev Mints `tokenCount` number of tokens starting from token 0 and
+     * ending with `tokenCount` - 1.
+     *
+     * Requirements:
+     *   -Caller must be the contract owner
+     *   -Can only call this function once
+     *
+     * Emits a {ConsecutiveTransfer} event according to eip-2309.
+     */
     function _mintConsecutive(uint256 tokenCount) internal virtual {
         require(msg.sender == owner());
         require(_tokenCount == 0, "You can only mint once!");
