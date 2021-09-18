@@ -49,7 +49,11 @@ contract ERC2309 is Context, ERC165, IERC721, IERC721Metadata, IERC2309, Ownable
     // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
+    // Number of tokens that have been minted
     uint256 private _tokenCount;
+
+    // Address of the token minter
+    address private _minter;
 
     /**
      * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
@@ -84,7 +88,7 @@ contract ERC2309 is Context, ERC165, IERC721, IERC721Metadata, IERC2309, Ownable
         require(tokenId < _tokenCount, "Tokens haven't been minted yet"); 
         address owner = _owners[tokenId];
         if (owner == address(0)) {
-            return Ownable.owner(); //Defaults to the contract creator being the owner
+            return _minter; //If no owner set, then the minter is the owner
         }
         return owner;
     }
@@ -271,6 +275,7 @@ contract ERC2309 is Context, ERC165, IERC721, IERC721Metadata, IERC2309, Ownable
 
         _tokenCount = tokenCount;
         _balances[owner()] = tokenCount;
+        _minter = msg.sender;
 
         emit ConsecutiveTransfer(0, tokenCount - 1, address(0), owner());
     }
